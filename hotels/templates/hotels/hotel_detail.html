@@ -1,0 +1,108 @@
+{% extends "hotels/base.html" %}
+
+{% load static %}
+{% block title %}{{hotel.name}}{% endblock title %}
+
+{% block content %}
+
+        <div class="container mt-5 ">
+            <div class="container">
+                <h1 class="text-center">{{ hotel.name }}</h1>
+                <p class="text-center">{{ hotel.location }}</p>
+
+                <!-- Image Carousel -->
+                <div id="hotelCarousel" class="carousel slide" data-ride="carousel">
+                    <div class="carousel-inner">
+                        {% if hotel.image %}
+                            <div class="carousel-item active">
+                                <img src="{{ hotel.image.url }}" class="d-block w-100" alt="{{ hotel.name }}">
+                            </div>
+                    {% else %}
+                            <div class="carousel-item active">
+                                <img src="{% static 'img/room-2.jpg' %}" class="d-block w-100" alt="Default Image">
+                            </div>
+                        {% endif %}
+                    </div>
+                    <a class="carousel-control-prev" href="#hotelCarousel" role="button" data-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="sr-only">Previous</span>
+                    </a>
+                    <a class="carousel-control-next" href="#hotelCarousel" role="button" data-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="sr-only">Next</span>
+                    </a>
+                </div>
+
+                <!-- Hotel Description -->
+                <div class="mt-5">
+                    <h3>About the Hotel</h3>
+                    <p>{{ hotel.description }}</p>
+                </div>
+
+                <!-- Amenities -->
+                <div class="mt-4">
+                    <h3>Amenities</h3>
+                    <ul>
+                        {% for amenity in hotel.amenities.all %}
+                            <li>{{ amenity.name }}: {{ amenity.description }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+
+                <!-- Price and Rating -->
+                <div class="mt-4">
+                    <h4>Price per Night: ${{ hotel.price_per_night }}</h4>
+                    <h4>Rating: {{ hotel.rating }} <i class="fas fa-star text-warning"></i></h4>
+                </div>
+            </div>
+        </div>
+
+        <!--Add comments-->
+        <div class="container mb-5 py-5">
+            <div class="row justify-content-center">
+                <div class="col-md-11"
+                    <h3>Add a comment</h3>
+                        <form method="POST">
+                            {% csrf_token %}
+                            
+                            <div class="mb-3">
+                                <label for="rating" class="form-label">Rating</label>
+                                {{ form.rating }}
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="content" class="form-label">Comment</label>
+                                {{ form.comment }}
+                            </div>
+
+                            <button type="submit" class="btn btn-primary">Submit</button>
+                        </form>
+                
+                ></div>
+
+                
+            </div>
+           
+        </div>
+       
+
+    {%endblock content%}
+<!-- Bootstrap JS and dependencies -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+<!-- Custom Script for animations -->
+<script>
+    $(document).ready(function(){
+        $('.carousel').carousel({
+            interval: 3000
+        });
+
+        $('.carousel').on('slide.bs.carousel', function () {
+            $('.carousel-item').addClass('fadeIn');
+        });
+    });
+</script>
+
+
