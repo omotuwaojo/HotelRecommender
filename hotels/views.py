@@ -17,14 +17,18 @@ def index(request):
     hotels = Hotel.objects.all()
     reviews = Review.objects.select_related('user').all().order_by('-created_at')[:10]  # Fetch recent comments
 
-    context ={
-        'hotels': hotels,
-        'reviews':reviews
-    }
-    if request.method == 'GET'and 'query'in request.GET:
-        return redirect('results')
-    return render(request, 'hotels/index.html', context)
+    query = request.GET.get('query', None)  # Get the search query from the form
+    search_results = Hotel.objects.filter(name__icontains=query) if query else None  # Search for hotels by name
 
+    context = {
+        'hotels': hotels,
+        'reviews': reviews,
+        'query': query,  # Pass the query back to the template
+        'search_results': search_results,
+        'no_results': search_results is not None and not search_results.exists()  # Check if no results are found
+    }
+
+    return render(request, 'hotels/index.html', context)
 
 def login(request):
     if request.method =="POST":
@@ -173,7 +177,7 @@ def service(request):
 def contact(request):
     if request.method == 'POST':
         name = request.POST.get('name')
-        email = request.POST.get('user_email')
+        email = request.POST.get('email')
         subject = request.POST.get('subject')
         message = request.POST.get('message')
 
