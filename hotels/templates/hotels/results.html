@@ -22,7 +22,7 @@
         <!-- Page Header End -->
 
 
-        <!-- Booking Start -->
+        <!-- Booking Start 
         <div class="container-fluid booking pb-5 wow fadeIn" data-wow-delay="0.1s">
             <div class="container">
                 <div class="bg-white shadow" style="padding: 35px;">
@@ -42,7 +42,7 @@
                 </div>
             </div>
         </div>
-        <!-- Booking End -->
+        Booking End -->
 
 
         <!-- Room Start -->
@@ -57,7 +57,7 @@
                         {% if no_results %}
                             <p>No results found for "{{ query }}".</p>
                         {% else %}
-                            {% for hotel in search_results %}
+                            {% for hotel in hotels %}
                             <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
                                 <div class="room-item shadow rounded overflow-hidden">
                                     <div class="position-relative">
@@ -98,9 +98,9 @@
                         {% endif %}
                     </div>
                 {% endif %}
-
             </div>
         </div>
+        
         <!-- Room End -->
 
 

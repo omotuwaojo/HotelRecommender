@@ -17,16 +17,29 @@ def index(request):
     hotels = Hotel.objects.all()
     reviews = Review.objects.select_related('user').all().order_by('-created_at')[:10]  # Fetch recent comments
 
-    query = request.GET.get('query', None)  # Get the search query from the form
-    search_results = Hotel.objects.filter(name__icontains=query) if query else None  # Search for hotels by name
-
+    # Initialize an empty context for search results
     context = {
         'hotels': hotels,
         'reviews': reviews,
-        'query': query,  # Pass the query back to the template
-        'search_results': search_results,
-        'no_results': search_results is not None and not search_results.exists()  # Check if no results are found
+        'query': None,
+        'search_results': None,
+        'no_results': False
     }
+
+    # Handle the search form
+    if request.method == 'GET' and 'query' in request.GET:
+        query = request.GET.get('query')
+        if query:
+            # Search in hotel name or description, you can add more fields using Q objects
+            search_results = Hotel.objects.filter(
+                Q(name__icontains=query) | Q(location__icontains=query)
+            )
+            context['query'] = query
+            context['search_results'] = search_results
+
+            # Check if there are no results
+            if not search_results.exists():
+                context['no_results'] = True
 
     return render(request, 'hotels/index.html', context)
 
