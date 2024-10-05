@@ -12,6 +12,7 @@ from django.http import HttpResponseRedirect
 from .form import CommentForm
 from .models import Hotel, Review, User, Contact, UserProfile, Amenity
 from django.contrib.auth.decorators import login_required # type: ignore
+import requests
 
 def index(request):
     hotels = Hotel.objects.all()
@@ -171,7 +172,54 @@ def recommend_hotels(user):
 
     return recommended_hotels
 
-  
+"""def recommend_hotels(city, preferences):
+    api_url = '"https://api.makcorps.com/city"'
+    headers = {
+        'Authorization': '66ffb5fdd7889da878cc6ec9',
+        'Content-Type': 'application/json'
+    }
+    
+    params = {
+        'location': city,
+        'amenities': ','.join(preferences.get('amenities', [])),
+        'rating': preferences.get('rating', 4)
+    }
+
+    response = requests.get(api_url, headers=headers, params=params)
+    
+    if response.status_code == 200:
+        hotels = response.json()
+        recommended_hotels = []
+
+        # Extracting the details for each hotel
+        for hotel in hotels:
+            recommended_hotels.append({
+                'name': hotel.get('name'),
+                'price': hotel.get('price', {}).get('total'),  # Assuming price is in the 'price' key
+                'image': hotel.get('image', {}).get('url'),  # Assuming image is in 'image' key
+                'location': hotel.get('location', {}).get('address'),  # Assuming location has an 'address'
+                'rating': hotel.get('rating'),
+                'amenities': hotel.get('amenities')
+            })
+        return recommended_hotels
+    else:
+        return None
+
+
+def recommendations(request):
+    city = request.GET.get('city', 'Nigria')
+    user_preferences = {
+        'amenities': ['wifi', 'pool'],
+        'rating': 4
+    }
+    recommended_hotels = recommend_hotels(city, user_preferences)
+    
+    context = {
+        'hotels': recommended_hotels
+    }
+    
+    return render(request, 'hotels/recommendations.html', context)"""
+ 
 
 def recommendations(request):
     if request.user.is_authenticated:
