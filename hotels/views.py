@@ -137,7 +137,12 @@ def hotel_detail(request, hotel_id):
         if form.is_valid():
             review = form.save(commit=False)
             review.hotel = hotel
-            review.user = request.user  # Set the user
+            
+            # Get the corresponding UserProfile for the logged-in user
+            user_profile = UserProfile.objects.get(user=request.user)
+            
+            # Assign the UserProfile to the review
+            review.user = user_profile
             review.rating = form.cleaned_data['rating']  # Save the rating
             review.save()
             return redirect('hotel_detail', hotel_id=hotel.id)
@@ -150,6 +155,7 @@ def hotel_detail(request, hotel_id):
         'form': form,
     }
     return render(request, 'hotels/hotel_detail.html', context)
+
 
 #@login_required
 def user_preferences(request):
