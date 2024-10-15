@@ -273,7 +273,7 @@
                     </div>-->
                     <nav class="navbar navbar-expand-lg bg-dark navbar-dark p-3 p-lg-0">
                         <a href="index.html" class="navbar-brand d-block d-lg-none">
-                            <h1 class="m-0 text-primary text-uppercase">Hotel Finder</h1>
+                            <h1 class="m-0 text-primary text-uppercase">Hotels</h1>
                         </a>
                         <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
                             <span class="navbar-toggler-icon"></span>
@@ -299,6 +299,7 @@
                             <div class="navbar-nav ml-auto action-buttons">
                                 {% if user.is_authenticated %}
                                 <a href="{% url "logout" %}" class="nav-item nav-link">Logout</a>
+                                <a href="{% url "profile_update" %}" class="nav-item nav-link">Update Profile</a>
                                 {% else %}
                                 <div class="nav-item dropdown">
                                     <a href="#" data-toggle="dropdown" class="nav-link dropdown-toggle mr-4">Login</a>
@@ -405,15 +406,15 @@
                 <div class="row g-5">
                     <div class="col-md-6 col-lg-4">
                         <div class="bg-primary rounded p-4">
-                            <a href="{% static 'index'%}"><h1 class="text-white text-uppercase mb-3">HotelFinder</h1></a>
+                            <a href="{% static 'index'%}"><h1 class="text-white text-uppercase mb-3">HR</h1></a>
                             <p class="text-white mb-0">
-								Download <a class="text-dark fw-medium" href="'https://htmlcodex.com/hotel-html-template-pro">Hotelier – Premium Version</a>, build a professional website for your hotel business and grab the attention of new visitors upon your site’s launch.
+								<!-- <a class="text-dark fw-medium" href="'https://htmlcodex.com/hotel-html-template-pro">Hotelier – Premium Version</a>, -->build a professional website for your hotel business and grab the attention of new visitors upon your site’s launch.
 							</p>
                         </div>
                     </div>
                     <div class="col-md-6 col-lg-3">
                         <h6 class="section-title text-start text-primary text-uppercase mb-4">Contact</h6>
-                        <p class="mb-2"><i class="fa fa-map-marker-alt me-3"></i>123 Street, New York, USA</p>
+                        <p class="mb-2"><i class="fa fa-map-marker-alt me-3"></i>123 Street, Nigeria</p>
                         <p class="mb-2"><i class="fa fa-phone-alt me-3"></i>+012 345 67890</p>
                         <p class="mb-2"><i class="fa fa-envelope me-3"></i>info@example.com</p>
                         <div class="d-flex pt-2">
@@ -449,10 +450,10 @@
                 <div class="copyright">
                     <div class="row">
                         <div class="col-md-6 text-center text-md-start mb-3 mb-md-0">
-                            &copy; <a class="border-bottom" href="#">Your Site Name</a>, All Right Reserved. 
+                            &copy; <a class="border-bottom" href="#">Hotels</a>, All Right Reserved. 
 							
-							<!--/*** This template is free as long as you keep the footer author’s credit link/attribution link/backlink. If you'd like to use the template without the footer author’s credit link/attribution link/backlink, you can purchase the Credit Removal License from "https://htmlcodex.com/credit-removal". Thank you for your support. ***/-->
-							Designed By <a class="border-bottom" href="https://htmlcodex.com">HTML Codex</a>
+							
+							Designed By <a class="border-bottom" href="#">EHINOLA OLADIMEJI O.</a>
                         </div>
                         <div class="col-md-6 text-center text-md-end">
                             <div class="footer-menu">

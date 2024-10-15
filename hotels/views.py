@@ -52,6 +52,7 @@ def login(request):
         
         if user is not None:
             auth_login(request, user)  # Use auth_login to avoid conflict
+            messages.success(request, 'Login suceessfull!')
             return redirect("index")  # Redirect to the index page after successful login
         else:
             messages.error(request, "Invalid username or password.")
@@ -83,6 +84,7 @@ def signup(request):
 
 def logout_view(request):
     logout(request)
+    messages.success(request, 'Logout suceessfull!')
     return HttpResponseRedirect(reverse("index"))
 
 
@@ -90,10 +92,41 @@ def hotel_list(request):
     if request.method =='GET':
         if request.user.is_authenticated:
             hotels = recommend_hotels(request.user)
-        else:
+        else: 
             hotels = Hotel.objects.all()
     return render(request, 'hotels/room.html', {'hotels': hotels})
 
+
+"""def hotel_list(request):
+    city = request.GET.get('city', 'Berlin')
+    checkin = request.GET.get('checkin', '2024-10-02')
+    checkout = request.GET.get('checkout', '2024-10-04')
+    
+    url = "https://booking-com.p.rapidapi.com/v1/hotels"
+    headers = {
+        'x-rapidapi-key': "9b7a74b5a0msh5b47c621eec6e8ep15ed70jsn8e8675677d2f",
+        'x-rapidapi-host': "booking-com.p.rapidapi.com"
+    }
+    
+    params = {
+        'locale': 'en-gb',
+        'units': 'metric',
+        'dest_id': city,
+        'checkin_date': checkin,
+        'checkout_date': checkout,
+        'adults_number': '2',
+        'room_number': '1',
+        'filter_by_currency': 'USD',
+        'order_by': 'price'
+    }
+    
+    response = requests.get(url, headers=headers, params=params)
+    if response.status_code == 200:
+        hotels = response.json().get('result', [])
+    else:
+        hotels = []
+    print(hotels)  # This will print the API response to your console
+    return render(request, 'hotels/room.html',{'hotels': hotels})"""
 
 def hotel_detail(request, hotel_id):
     hotel = get_object_or_404(Hotel, pk=hotel_id)
@@ -172,39 +205,80 @@ def recommend_hotels(user):
 
     return recommended_hotels
 
-"""def recommend_hotels(city, preferences):
-    api_url = '"https://api.makcorps.com/city"'
+"""def recommendations(request):
+    if request.method == 'GET':
+        city = request.GET.get('city')  # Get the city from query parameters or user input
+        checkin = request.GET.get('checkin')  # Check-in date from user input
+        checkout = request.GET.get('checkout')  # Check-out date from user input
+
+        # Replace 'YOUR_API_KEY' with your actual RapidAPI key
+        url = "https://booking-com.p.rapidapi.com/v1/hotels/search"
+        headers = {
+            'x-rapidapi-key': "9b7a74b5a0msh5b47c621eec6e8ep15ed70jsn8e8675677d2f",
+            'x-rapidapi-host': "booking-com.p.rapidapi.com"
+        }
+        
+        # Parameters for the hotel search request
+        params = {
+            'locale': 'en-gb',
+            'units': 'metric',
+            'dest_type': 'Ogun',  # Type of destination
+            'dest_id': 'Ogun-State',  # City name or ID
+            'checkin_date': 'checkin',  # Example: '2024-10-02'
+            'checkout_date': 'checkout',  # Example: '2024-10-04'
+            'adults_number': '2',  # Example: number of adults
+            'room_number': '1',  # Number of rooms
+            'filter_by_currency': 'USD',
+            'order_by': 'price',  # Sort by price
+            'include_adjacency': 'true'  # Option to include nearby hotels
+        }
+        
+        response = requests.get(url, headers=headers, params=params)
+        
+        if response.status_code == 200:
+            hotels = response.json().get('result', [])  # Parse the JSON response for 'result'
+        else:
+            hotels = None  # Handle error or return an empty list
+
+        context = {
+            'hotels': hotels,  # Pass the hotel data to the template
+            'city': city,
+            'checkin': checkin,
+            'checkout': checkout
+        }
+
+        return render(request, 'hotels/room.html', context)
+
+    return render(request, 'hotels/room.html')
+
+def recommendations(request):
+    city = request.GET.get('city', 'default_city')
+    checkin = request.GET.get('checkin', '2024-10-16')
+    checkout = request.GET.get('checkout', '2024-10-23')
+
+    # API request to get hotels data
+    url = 'https://booking-com.p.rapidapi.com/v1/hotels/locations'
     headers = {
-        'Authorization': '66ffb5fdd7889da878cc6ec9',
-        'Content-Type': 'application/json'
+        'x-rapidapi-key': '9b7a74b5a0msh5b47c621eec6e8ep15ed70jsn8e8675677d2f',
+        'x-rapidapi-host': 'booking-com.p.rapidapi.com'
     }
-    
     params = {
-        'location': city,
-        'amenities': ','.join(preferences.get('amenities', [])),
-        'rating': preferences.get('rating', 4)
+        'locale': 'en-gb',
+        'name': city,
+        'checkin': checkin,
+        'checkout': checkout
     }
 
-    response = requests.get(api_url, headers=headers, params=params)
+    response = requests.get(url, headers=headers, params=params)
     
     if response.status_code == 200:
         hotels = response.json()
-        recommended_hotels = []
-
-        # Extracting the details for each hotel
-        for hotel in hotels:
-            recommended_hotels.append({
-                'name': hotel.get('name'),
-                'price': hotel.get('price', {}).get('total'),  # Assuming price is in the 'price' key
-                'image': hotel.get('image', {}).get('url'),  # Assuming image is in 'image' key
-                'location': hotel.get('location', {}).get('address'),  # Assuming location has an 'address'
-                'rating': hotel.get('rating'),
-                'amenities': hotel.get('amenities')
-            })
-        return recommended_hotels
     else:
-        return None
+        hotels = []
 
+    # Pass the data to the template
+    return render(request, 'hotels/room.html', {'hotels': hotels})
+"""
 
 def recommendations(request):
     city = request.GET.get('city', 'Nigria')
@@ -218,7 +292,7 @@ def recommendations(request):
         'hotels': recommended_hotels
     }
     
-    return render(request, 'hotels/recommendations.html', context)"""
+    return render(request, 'hotels/recommendations.html', context)
  
 
 def recommendations(request):
@@ -241,7 +315,7 @@ def contact(request):
         email = request.POST.get('email')
         subject = request.POST.get('subject')
         message = request.POST.get('message')
-
+ 
         print(f"Submitted Email: {email}")
         # Error messages
         errors = []
@@ -321,7 +395,7 @@ def profile_update(request):
         # Handle profile picture upload
         if request.FILES.get('profile_picture'):
             profile.profile_picture = request.FILES.get('profile_picture')
-        
+
         # Update preferences as a JSON object
         profile.preferences = {
             'amenities': amenities,
@@ -337,19 +411,22 @@ def profile_update(request):
         profile.location = location
         profile.rating = rating
 
-         # Update the many-to-many relationship for amenities
+        # Update the many-to-many relationship for amenities
         amenities_objects = Amenity.objects.filter(id__in=amenities_ids)  # Query amenities by their IDs
         profile.amenities.set(amenities_objects)  # Use .set() to update the many-to-many field
 
         profile.save()
         messages.success(request, 'Profile updated successfully!')
-        return redirect('profile_update')
+        return redirect('index')
+
+    # Define the context outside the POST block, to be used for both POST and GET
+    context = {
+        'profile': profile
+    }
 
     # For GET requests, render the profile update form
-    context = {
-        'profile': profile,
-    }
-    return render(request, 'hotels/index.html', context)
+    return render(request, 'hotels/profile_update.html', context)
+
 
 def results(request):
     query = request.GET.get('query')
